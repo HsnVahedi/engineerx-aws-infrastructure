@@ -34,6 +34,9 @@ pipeline {
                     }
                     if (env.ACTION == 'apply') {
                         sh('terraform apply --auto-approve')
+                    }
+                    if (env.ACTION == 'create') {
+                        sh('terraform apply --auto-approve')
                         sh('aws eks --region us-east-2 update-kubeconfig --name test-eks-irsa')
 
                         sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
