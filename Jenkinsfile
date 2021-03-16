@@ -20,7 +20,6 @@ pipeline {
                 sh('aws configure set aws_secret_access_key $SECRET_KEY')
                 sh('aws configure set default.region us-east-2')
             }
-            
         }
         stage('Terraform Initialization') {
             steps {
@@ -37,6 +36,11 @@ pipeline {
                         sh('terraform apply --auto-approve')
                     }
                 }
+            }
+        }
+        stage('Set kubeconfig') {
+            steps {
+                sh('aws eks --region us-east-2 update-kubeconfig --name test-eks-irsa')
             }
         }
         stage('Install Cluster Autoscaler') {
