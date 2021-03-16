@@ -86,4 +86,7 @@ module "eks" {
       ]
     }
   ]
+
+  workers_additional_policies = [aws_iam_policy.worker_policy.arn]
+
 }

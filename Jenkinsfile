@@ -34,20 +34,12 @@ pipeline {
                     }
                     if (env.ACTION == 'apply') {
                         sh('terraform apply --auto-approve')
+                        sh('aws eks --region us-east-2 update-kubeconfig --name test-eks-irsa')
+                        sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
+                        sh('helm repo update')
+                        sh('helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml')
                     }
                 }
-            }
-        }
-        stage('Set kubeconfig') {
-            steps {
-                sh('aws eks --region us-east-2 update-kubeconfig --name test-eks-irsa')
-            }
-        }
-        stage('Install Cluster Autoscaler') {
-            steps {
-                sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
-                sh('helm repo update')
-                sh('helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml')
             }
         }
     }
