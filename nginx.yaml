@@ -10,12 +10,13 @@ spec:
   template:
     metadata:
       labels:
-        service: nginx
         app: nginx
     spec:
       containers:
       - image: nginx
         name: nginx-to-scaleout
+        ports:
+        - containerPort: 80
         resources:
           limits:
             cpu: 500m
@@ -23,3 +24,16 @@ spec:
           requests:
             cpu: 500m
             memory: 512Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
