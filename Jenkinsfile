@@ -43,9 +43,9 @@ pipeline {
                         sh('helm repo update')
                         sh('helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml')
 
-                        sh('helm repo add eks https://aws.github.io/eks-charts')
-                        sh('kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"')
-                        sh('helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=test-eks-irsa')
+                        // sh('helm repo add eks https://aws.github.io/eks-charts')
+                        // sh('kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"')
+                        // sh('helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=test-eks-irsa')
                     }
                 }
             }
