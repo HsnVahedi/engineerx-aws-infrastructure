@@ -4,7 +4,7 @@ terraform {
 
 provider "aws" {
   version = ">= 2.28.1"
-  region  = local.region
+  region  = var.region
 }
 
 provider "local" {
@@ -47,14 +47,14 @@ module "vpc" {
   enable_dns_hostnames = true
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/elb"                      = "1"
   }
 }
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = local.cluster_name
+  cluster_name    = var.cluster_name
   cluster_version = "1.18"
   subnets         = module.vpc.public_subnets
   vpc_id          = module.vpc.vpc_id
@@ -76,7 +76,7 @@ module "eks" {
           "value"               = "true"
         },
         {
-          "key"                 = "k8s.io/cluster-autoscaler/${local.cluster_name}"
+          "key"                 = "k8s.io/cluster-autoscaler/${var.cluster_name}"
           "propagate_at_launch" = "false"
           "value"               = "true"
         }

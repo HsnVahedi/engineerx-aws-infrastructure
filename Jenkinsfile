@@ -13,13 +13,15 @@ pipeline {
         SECRET_KEY = credentials('aws-secret-key')
         ACTION = "${params.ACTION}"
         ROLE_ARN = "008082804869"
+        REGION = "us-east-2"
+        CLUSTER_NAME = "engineerx"
     }
     stages {
         stage('Providing Access Keys') {
             steps {
                 sh('aws configure set aws_access_key_id $ACCESS_KEY_ID')
                 sh('aws configure set aws_secret_access_key $SECRET_KEY')
-                sh('aws configure set default.region us-east-2')
+                sh('aws configure set default.region $REGION')
             }
         }
         stage('Terraform Initialization') {
@@ -35,15 +37,15 @@ pipeline {
                             string(name: "ACTION", value: "destroy")
                         ]
                         sh('terraform refresh')
-                        sh('terraform destroy --auto-approve')
+                        sh('terraform destroy --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                     }
                     if (env.ACTION == 'apply') {
                         sh('terraform refresh')
-                        sh('terraform apply --auto-approve')
+                        sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                     }
                     if (env.ACTION == 'create') {
-                        sh('terraform apply --auto-approve')
-                        sh('aws eks --region us-east-2 update-kubeconfig --name test-eks-irsa')
+                        sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
+                        sh('aws eks --region $REGION update-kubeconfig --name engineerx')
 
                         // TODO: Use terraform Helm Provider instead of these.
                         sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
