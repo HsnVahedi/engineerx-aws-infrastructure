@@ -33,6 +33,7 @@ pipeline {
                         build job: 'engineerx-aws-deployment', parameters: [
                             string(name: "ACTION", value: "destroy")
                         ]
+                        sh('terraform refresh')
                         sh('terraform destroy --auto-approve')
                     }
                     if (env.ACTION == 'apply') {
