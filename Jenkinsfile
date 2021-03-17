@@ -12,6 +12,7 @@ pipeline {
         ACCESS_KEY_ID = credentials('aws-access-key-id')
         SECRET_KEY = credentials('aws-secret-key')
         ACTION = "${params.ACTION}"
+        ROLE_ARN = "008082804869"
     }
     stages {
         stage('Providing Access Keys') {
