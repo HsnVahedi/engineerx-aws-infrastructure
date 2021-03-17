@@ -37,6 +37,7 @@ pipeline {
                         sh('terraform destroy --auto-approve')
                     }
                     if (env.ACTION == 'apply') {
+                        sh('terraform refresh')
                         sh('terraform apply --auto-approve')
                     }
                     if (env.ACTION == 'create') {
