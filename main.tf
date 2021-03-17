@@ -70,7 +70,7 @@ module "eks" {
     {
       name                 = "worker-group-1"
       instance_type        = "t3.medium"
-      asg_desired_capacity = 1
+      # asg_desired_capacity = 1
       asg_max_size         = 10 
       tags = [
         {
