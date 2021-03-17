@@ -45,12 +45,12 @@ pipeline {
                     }
                     if (env.ACTION == 'create') {
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
-                        sh('aws eks --region $REGION update-kubeconfig --name engineerx')
+                        sh('aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME')
 
                         // TODO: Use terraform Helm Provider instead of these.
-                        sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
-                        sh('helm repo update')
-                        sh("helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml --set 'rbac.ServiceAccount.annotations.eks\\.amazonaws\\.com/role-arn=arn:aws:iam::\$(terraform output aws_account_id -raw):role/cluster-autoscaler'")
+                        // sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
+                        // sh('helm repo update')
+                        // sh("helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml --set 'rbac.ServiceAccount.annotations.eks\\.amazonaws\\.com/role-arn=arn:aws:iam::\$(terraform output aws_account_id -raw):role/cluster-autoscaler'")
                     }
                 }
             }

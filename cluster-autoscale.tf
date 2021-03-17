@@ -55,3 +55,52 @@ data "aws_iam_policy_document" "cluster_autoscaler" {
     }
   }
 }
+
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
+}
+
+resource "helm_release" "cluster_autoscaler" {
+  name       = "cluster-autoscaler"
+
+  repository = "https://kubernetes.github.io/autoscaler"
+  chart      = "cluster-autoscaler"
+  namespace  = "kube-system"
+
+  set {
+    name  = "awsRegion"
+    value = var.region
+    type  = "string"
+  }
+
+  set {
+    name  = "rbac.create"
+    value = true
+  }
+
+  set {
+    name  = "rbac.ServiceAccount.name"
+    value = "cluster-autoscaler-aws-cluster-autoscaler-chart"
+    type  = "string"
+  }
+
+  set {
+    name  = "rbac.ServiceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/cluster-autoscaler"
+    type  = "string"
+  }
+
+  set {
+    name  = "autoDiscovery.clusterName"
+    value = var.cluster_name
+    type  = "string"
+  }
+
+  set {
+    name  = "autoDiscovery.enabled"
+    value = true 
+  }
+
+}
