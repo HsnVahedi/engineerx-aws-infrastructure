@@ -1,7 +1,7 @@
 variable "cluster_name" {
-    type = "string"
+    type = string
 }
 
 variable "region" {
-    type = "string"
+    type = string
 }
