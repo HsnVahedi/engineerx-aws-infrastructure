@@ -55,7 +55,6 @@ pipeline {
                         sh("sed -i 's/AWS_ACCOUNT_ID/$AWS_ACCOUNT_ID/g' cluster-autoscaler-chart-values.yaml")
                         sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
                         sh('helm repo update')
-                        sh('kubectl get deployment -n kube-system')
                         sh("helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml")
                     }
                 }
