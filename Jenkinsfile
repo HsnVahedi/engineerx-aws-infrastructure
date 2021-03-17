@@ -44,12 +44,10 @@ pipeline {
                         sh('terraform apply --auto-approve')
                         sh('aws eks --region us-east-2 update-kubeconfig --name test-eks-irsa')
 
+                        // TODO: User terraform Helm Provider instead of these
                         sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
                         sh('helm repo update')
-                        sh('helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml')
-
-                        // sh('kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.2/components.yaml')
-                        // sh('kubectl autoscale deployment php-to-scaleout --cpu-percent=50 --min=1 --max=10')
+                        sh("helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml --set 'rbac.ServiceAccount.annotations.eks\.amazonaws\.com/role-arn=arn:aws:iam::$ROLE_ARN:role/cluster-autoscaler'")
                     }
                 }
             }
