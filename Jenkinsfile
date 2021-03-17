@@ -12,7 +12,7 @@ pipeline {
         ACCESS_KEY_ID = credentials('aws-access-key-id')
         SECRET_KEY = credentials('aws-secret-key')
         ACTION = "${params.ACTION}"
-        // ROLE_ARN = "008082804869"
+        AWS_ACCOUNT_ID = credentials('aws-account-id') 
         REGION = "us-east-2"
         CLUSTER_NAME = "engineerx"
     }
@@ -48,9 +48,10 @@ pipeline {
                         sh('aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME')
 
                         // TODO: Use terraform Helm Provider instead of these.
-                        // sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
-                        // sh('helm repo update')
-                        // sh("helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml --set 'rbac.ServiceAccount.annotations.eks\\.amazonaws\\.com/role-arn=arn:aws:iam::\$(terraform output aws_account_id -raw):role/cluster-autoscaler'")
+                        sh("sed -i 's/AWS_ACCOUNT_ID/$AWS_ACCOUNT_ID/g' cluster-autoscaler-chart-values.yaml")
+                        sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
+                        sh('helm repo update')
+                        sh("helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml")
                     }
                 }
             }
