@@ -1,6 +1,6 @@
-resource "kubernetes_deployment" "nginx_to_scaleout" {
+resource "kubernetes_deployment" "php_to_scaleout" {
   metadata {
-    name = "nginx-to-scaleout"
+    name = "php-to-scaleout"
   }
 
   spec {
@@ -8,21 +8,21 @@ resource "kubernetes_deployment" "nginx_to_scaleout" {
 
     selector {
       match_labels = {
-        app = "nginx"
+        app = "php"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "nginx"
+          app = "php"
         }
       }
 
       spec {
         container {
-          name  = "nginx-to-scaleout"
-          image = "nginx"
+          name  = "php-to-scaleout"
+          image = "us.gcr.io/k8s-artifacts-prod/hpa-example"
 
           port {
             container_port = 80
@@ -35,7 +35,7 @@ resource "kubernetes_deployment" "nginx_to_scaleout" {
             }
 
             requests {
-              cpu    = "500m"
+              cpu    = "200m"
               memory = "512Mi"
             }
           }
@@ -45,9 +45,9 @@ resource "kubernetes_deployment" "nginx_to_scaleout" {
   }
 }
 
-resource "kubernetes_service" "nginx" {
+resource "kubernetes_service" "php" {
   metadata {
-    name = "nginx"
+    name = "php"
   }
 
   spec {
@@ -58,10 +58,10 @@ resource "kubernetes_service" "nginx" {
     }
 
     selector = {
-      app = "nginx"
+      app = "php"
     }
 
-    type = "LoadBalancer"
+    # type = "LoadBalancer"
   }
 }
 
