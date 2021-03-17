@@ -30,7 +30,7 @@ resource "kubernetes_deployment" "php_to_scaleout" {
 
           resources {
             limits {
-              cpu    = "500m"
+              cpu    = "300m"
               memory = "512Mi"
             }
 
@@ -65,3 +65,20 @@ resource "kubernetes_service" "php" {
   }
 }
 
+resource "kubernetes_horizontal_pod_autoscaler" "php_hpa" {
+  metadata {
+    name = "php-hpa"
+  }
+
+  spec {
+    max_replicas = 10
+    min_replicas = 1
+
+    target_cpu_utilization_percentage = 80
+
+    scale_target_ref {
+      kind = "Deployment"
+      name = "php-to-scaleout"
+    }
+  }
+}
