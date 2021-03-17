@@ -30,6 +30,9 @@ pipeline {
             steps {
                 script {
                     if (env.ACTION == 'destroy') {
+                        build job: 'engineerx-aws-deployment', parameters: [
+                            string(name: "ACTION", value: "destroy")
+                        ]
                         sh('terraform destroy --auto-approve')
                     }
                     if (env.ACTION == 'apply') {
