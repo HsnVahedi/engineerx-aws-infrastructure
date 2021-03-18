@@ -51,7 +51,7 @@ pipeline {
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         sh('aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME')
 
-                        // TODO: Use terraform Helm Provider instead of these.
+                        // TODO: Use terraform Helm Provider instead of these ugly commands.
                         sh("sed -i 's/AWS_ACCOUNT_ID/$AWS_ACCOUNT_ID/g' cluster-autoscaler-chart-values.yaml")
                         sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
                         sh('helm repo update')
