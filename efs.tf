@@ -16,7 +16,7 @@ resource "aws_efs_file_system" "media_efs" {
 
 resource "aws_efs_mount_target" "media_efs_mount_targets" {
   for_each       = toset(module.vpc.public_subnets)
-  subnet_id      = each.id
+  subnet_id      = each.value.id
   file_system_id = aws_efs_file_system.media_efs.id
   security_groups = [aws_security_group.eks_efs_group.id]
 }
