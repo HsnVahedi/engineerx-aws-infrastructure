@@ -24,3 +24,12 @@ resource "kubernetes_namespace" "integration_test" {
     }
   }
 }
+
+resource "kubernetes_namespace" "storage" {
+  metadata {
+    name = "storage"
+    labels = {
+      role = "infrastructure"
+    }
+  }
+}

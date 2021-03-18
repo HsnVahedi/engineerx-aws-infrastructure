@@ -14,13 +14,6 @@ resource "aws_efs_file_system" "media_efs" {
 
 }
 
-# resource "aws_efs_mount_target" "media_efs_mount_targets" {
-#   for_each       = toset(module.vpc.public_subnets)
-#   subnet_id      = each.value
-#   file_system_id = aws_efs_file_system.media_efs.id
-#   security_groups = [aws_security_group.eks_efs_group.id]
-# }
-
 resource "aws_efs_mount_target" "media_efs_mount_targets" {
   count = 3
   subnet_id      = module.vpc.public_subnets[count.index] 
