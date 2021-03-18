@@ -28,7 +28,7 @@ terraform {
     }
     kustomization = {
       source  = "kbst/kustomize"
-      version = "v0.2.0-beta.3"
+      version = "0.2.0-beta.3"
     }
   }
   required_version = ">= 0.12.0"
