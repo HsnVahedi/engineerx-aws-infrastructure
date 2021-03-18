@@ -14,20 +14,21 @@ terraform {
       source  = "hashicorp/local"
       version = "~> 1.2"
     }
-
     null = {
       source  = "hashicorp/null"
       version = "~> 2.1"
     }
-
     template = {
       source  = "hashicorp/template"
       version = "~> 2.1"
     }
-
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.0.1"
+    }
+    kustomization = {
+      source  = "kbst/kustomize"
+      version = "v0.2.0-beta.3"
     }
   }
   required_version = ">= 0.12.0"
