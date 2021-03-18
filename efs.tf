@@ -23,13 +23,13 @@ resource "aws_efs_mount_target" "media_efs_mount_targets" {
 
 
 
-resource "helm_release" "aws_efs_csi_driver" {
-  name       = "aws-efs-csi-driver/aws-efs-csi-driver"
+# resource "helm_release" "aws_efs_csi_driver" {
+#   name       = "aws-efs-csi-driver/aws-efs-csi-driver"
 
-  repository = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
-  chart      = "aws-efs-csi-driver"
-  namespace  = "kube-system"
-}
+#   repository = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
+#   chart      = "aws-efs-csi-driver"
+#   namespace  = "kube-system"
+# }
 
 # data "kustomization" "kustomization_info" {
 #   provider = kustomization

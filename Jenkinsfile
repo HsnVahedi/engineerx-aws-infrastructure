@@ -56,6 +56,10 @@ pipeline {
                         sh('helm repo add autoscaler https://kubernetes.github.io/autoscaler')
                         sh('helm repo update')
                         sh("helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml")
+
+                        sh('helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/')
+                        sh('helm repo update')
+                        sh('helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-driver/aws-efs-csi-driver')
                     }
                 }
             }
