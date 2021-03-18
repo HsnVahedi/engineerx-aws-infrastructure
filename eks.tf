@@ -14,7 +14,41 @@ module "eks" {
     {
       name                 = "worker-group-1"
       instance_type        = "t3.xlarge"
-      asg_max_size         = 20 
+      asg_max_size         = 10
+      tags = [
+        {
+          "key"                 = "k8s.io/cluster-autoscaler/enabled"
+          "propagate_at_launch" = "false"
+          "value"               = "true"
+        },
+        {
+          "key"                 = "k8s.io/cluster-autoscaler/${var.cluster_name}"
+          "propagate_at_launch" = "false"
+          "value"               = "true"
+        }
+      ]
+    },
+    {
+      name                 = "worker-group-2"
+      instance_type        = "t3.large"
+      asg_max_size         = 15
+      tags = [
+        {
+          "key"                 = "k8s.io/cluster-autoscaler/enabled"
+          "propagate_at_launch" = "false"
+          "value"               = "true"
+        },
+        {
+          "key"                 = "k8s.io/cluster-autoscaler/${var.cluster_name}"
+          "propagate_at_launch" = "false"
+          "value"               = "true"
+        }
+      ]
+    },
+    {
+      name                 = "worker-group-3"
+      instance_type        = "t3.medium"
+      asg_max_size         = 20   
       tags = [
         {
           "key"                 = "k8s.io/cluster-autoscaler/enabled"
