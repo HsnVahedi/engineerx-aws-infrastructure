@@ -33,13 +33,6 @@ pipeline {
             steps {
                 script {
                     if (env.ACTION == 'destroy') {
-                        build job: 'engineerx-aws-deployment', parameters: [
-                            string(name: "ACTION", value: "destroy")
-                        ]
-                        sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
-                        sh('terraform destroy --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
-                    }
-                    if (env.ACTION == 'destroy-infra') {
                         sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         sh('terraform destroy --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                     }
