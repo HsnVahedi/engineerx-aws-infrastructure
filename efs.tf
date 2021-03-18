@@ -6,7 +6,7 @@ resource "aws_security_group" "eks_efs_group" {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = [module.vpc.cidr_block]
+    cidr_blocks = [module.vpc.vpc_cidr_block]
   }
 }
 
@@ -37,8 +37,8 @@ resource "kustomization_resource" "kustomization_resources" {
 resource "kubernetes_storage_class" "efs_sc" {
   metadata {
     name = "efs-sc"
-    storage_provisioner = "efs.csi.aws.com"
   }
+  storage_provisioner = "efs.csi.aws.com"
 }
 
 resource "kubernetes_persistent_volume" "media_efs_pvc" {
@@ -54,11 +54,15 @@ resource "kubernetes_persistent_volume" "media_efs_pvc" {
     access_modes                     = ["ReadWriteMany"]
     persistent_volume_reclaim_policy = "Retain"
     storage_class_name               = "efs-sc"
-    csi = {
-      driver = "efs.csi.aws.com"
-      volume_handle =  aws_efs_file_system.media_efs.id
+    persistent_volume_source {
+      csi {
+        driver = "efs.csi.aws.com"
+        volume_handle =  aws_efs_file_system.media_efs.id
+      }
     }
+    
   }
+
 }
 
 resource "kubernetes_persistent_volume_claim" "efs_storage_claim" {

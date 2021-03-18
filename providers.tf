@@ -29,5 +29,5 @@ provider "kubernetes" {
 }
 
 provider "kustomization" {
-    kubeconfige_raw = module.eks.kubeconfig 
+    kubeconfig_raw = module.eks.kubeconfig 
 }
