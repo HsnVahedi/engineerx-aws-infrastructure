@@ -84,3 +84,10 @@ resource "kubernetes_persistent_volume_claim" "efs_storage_claim" {
   }
 }
 
+resource "helm_release" "cluster_autoscaler" {
+  name       = "aws-efs-csi-driver"
+
+  repository = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
+  chart      = "aws-efs-csi-driver/aws-efs-csi-driver"
+  namespace  = "kube-system"
+}
