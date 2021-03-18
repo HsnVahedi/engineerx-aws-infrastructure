@@ -26,13 +26,13 @@ data "kustomization" "kustomization_info" {
   path = "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.0"
 }
 
-resource "kustomization_resource" "kustomization_resources" {
-  provider = kustomization
+# resource "kustomization_resource" "kustomization_resources" {
+#   provider = kustomization
 
-  for_each = data.kustomization.kustomization_info.ids
+#   for_each = data.kustomization.kustomization_info.ids
 
-  manifest = data.kustomization.kustomization_info.manifests[each.value]
-}
+#   manifest = data.kustomization.kustomization_info.manifests[each.value]
+# }
 
 resource "kubernetes_storage_class" "efs_sc" {
   metadata {
