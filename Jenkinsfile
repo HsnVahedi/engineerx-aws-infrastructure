@@ -36,9 +36,9 @@ pipeline {
             steps {
                 script {
                     if (env.ACTION == 'destroy') {
-                        sh('aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME')
-                        sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=false')
-                        sh('kubectl -n kube-system rollout status ds aws-node')
+                        // sh('aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME')
+                        // sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=false')
+                        // sh('kubectl -n kube-system rollout status ds aws-node')
                         script {
                             def media_efs_id = sh(
                                 script: 'terraform output -raw media_efs_id',
@@ -93,8 +93,8 @@ pipeline {
                                 string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
                             ]
                         }
-                        sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=true')
-                        sh('kubectl -n kube-system rollout status ds aws-node')
+                        // sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=true')
+                        // sh('kubectl -n kube-system rollout status ds aws-node')
                     }
                 }
             }
