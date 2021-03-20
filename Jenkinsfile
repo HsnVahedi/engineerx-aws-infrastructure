@@ -33,22 +33,27 @@ pipeline {
             steps {
                 script {
                     if (env.ACTION == 'destroy') {
+                        script {
+                            def media_efs_id = sh(
+                                script: 'terraform output -raw media_efs_id',
+                                returnStdout: true
+                            )
+                            def static_efs_id = sh(
+                                script: 'terraform output -raw static_efs_id',
+                                returnStdout: true
+                            )
+                            build job: 'efs-pv', parameters: [
+                                string(name: "MEDIA_EFS_ID", value: "${media_efs_id}"),
+                                string(name: "STATIC_EFS_ID", value: "${static_efs_id}"),
+                                string(name: "ACTION", value: "destroy")
+                            ]
+                        }
                         sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         sh('terraform destroy --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                     }
                     if (env.ACTION == 'apply') {
                         sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
-                        // script {
-                        //     def media_efs_id = sh(
-                        //         script: 'terraform output -raw media_efs_id',
-                        //         returnStdout: true
-                        //     )
-                        //     build job: 'backend-test', parameters: [
-                        //         string(name: "BACKEND_VERSION", value: "${media_efs_id}")
-                        //     ]
-                        //     println media_efs_id
-                        // }
                     }
                     if (env.ACTION == 'create') {
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
@@ -63,6 +68,21 @@ pipeline {
                         sh('helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/')
                         sh('helm repo update')
                         sh('helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-driver/aws-efs-csi-driver')
+                        script {
+                            def media_efs_id = sh(
+                                script: 'terraform output -raw media_efs_id',
+                                returnStdout: true
+                            )
+                            def static_efs_id = sh(
+                                script: 'terraform output -raw static_efs_id',
+                                returnStdout: true
+                            )
+                            build job: 'efs-pv', parameters: [
+                                string(name: "MEDIA_EFS_ID", value: "${media_efs_id}"),
+                                string(name: "STATIC_EFS_ID", value: "${static_efs_id}"),
+                                string(name: "ACTION", value: "create")
+                            ]
+                        }
                     }
                 }
             }
