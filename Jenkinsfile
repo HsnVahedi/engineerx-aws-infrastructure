@@ -40,7 +40,10 @@ pipeline {
                         sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         script {
-                            media_efs_id = sh('terraform output -raw media_efs_id')
+                            media_efs_id = sh(
+                                script: 'terraform output -raw media_efs_id',
+                                returnStdout: true
+                            )
                         }
                         sh('echo ${media_efs_id}')
                     }
