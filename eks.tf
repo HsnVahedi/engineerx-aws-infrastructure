@@ -10,6 +10,8 @@ module "eks" {
       root_volume_type = "gp2"
   }
 
+  worker_additional_security_group_ids = [aws_security_group.rds_sg.id]
+
   worker_groups = [
     {
       name                 = "worker-group-1"
