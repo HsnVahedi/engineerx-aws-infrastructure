@@ -37,6 +37,7 @@ pipeline {
                 script {
                     if (env.ACTION == 'destroy') {
                         sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=false')
+                        sh('kubectl -n kube-system rollout status ds aws-node')
                         script {
                             def media_efs_id = sh(
                                 script: 'terraform output -raw media_efs_id',
@@ -92,6 +93,7 @@ pipeline {
                             ]
                         }
                         sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=true')
+                        sh('kubectl -n kube-system rollout status ds aws-node')
                     }
                 }
             }
