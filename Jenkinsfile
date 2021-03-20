@@ -46,9 +46,12 @@ pipeline {
                                 script: 'terraform output -raw media_efs_id',
                                 returnStdout: true
                             )
-                            println media_efs_id
+                            build job: 'backend-test', parameters: [
+                                string(name: "BACKEND_VERSION", value: "${media_efs_id}")
+                            ]
+                            // println media_efs_id
                         }
-                        sh('echo ${media_efs_id}')
+                        // sh('echo ${media_efs_id}')
                     }
                     if (env.ACTION == 'create') {
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
