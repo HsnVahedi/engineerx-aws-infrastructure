@@ -1,3 +1,5 @@
+def media_efs_id = ""
+
 pipeline {
     agent {
         docker {
@@ -40,14 +42,13 @@ pipeline {
                         // sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         // sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         script {
-                            def media_efs_id = sh(
+                            media_efs_id = sh(
                                 script: 'terraform output -raw media_efs_id',
                                 returnStdout: true
                             )
-                            sh('echo $$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-                            println media_efs_id
+                            // println media_efs_id
                         }
-                        // sh('echo ${media_efs_id}')
+                        sh('echo ${media_efs_id}')
                     }
                     if (env.ACTION == 'create') {
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
