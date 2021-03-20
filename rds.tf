@@ -35,6 +35,7 @@ module "db" {
   source                  = "terraform-aws-modules/rds/aws"
   version                 = "~> 2.0"
   name                    = "engineerx"
+  identifier              = "engineerx"
   instance_class          = "db.t3.micro"
   engine                  = "postgres"
   subnet_ids              = vpc.public_subnets
@@ -46,6 +47,8 @@ module "db" {
   port                    = "5432"
   backup_retention_period = 0
   maintenance_window      = "Mon:00:00-Mon:03:00"
+  backup_window           = "03:00-06:00"
+
 }
 
 resource "aws_iam_role_policy_attachment" "cni_policy_attachment" {
