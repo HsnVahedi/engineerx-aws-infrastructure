@@ -53,6 +53,7 @@ pipeline {
                         sh('helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/')
                         sh('helm repo update')
                         sh('helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-driver/aws-efs-csi-driver')
+                        sh('echo $(terraform output -raw media_efs_id)')
                     }
                 }
             }
