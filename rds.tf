@@ -48,7 +48,7 @@ module "db" {
   backup_retention_period = 0
   maintenance_window      = "Mon:00:00-Mon:03:00"
   backup_window           = "03:00-06:00"
-
+  engine_version       = "11.10"
 }
 
 resource "aws_iam_role_policy_attachment" "cni_policy_attachment" {
