@@ -39,6 +39,10 @@ pipeline {
                     if (env.ACTION == 'apply') {
                         sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
+                        script {
+                            media_efs_id = sh('terraform output -raw media_efs_id')
+                        }
+                        sh('echo ${media_efs_id}')
                     }
                     if (env.ACTION == 'create') {
                         sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
@@ -53,7 +57,6 @@ pipeline {
                         sh('helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/')
                         sh('helm repo update')
                         sh('helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-driver/aws-efs-csi-driver')
-                        sh('echo $(terraform output -raw media_efs_id)')
                     }
                 }
             }
