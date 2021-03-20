@@ -38,7 +38,7 @@ module "db" {
   identifier              = "engineerx"
   instance_class          = "db.t3.micro"
   engine                  = "postgres"
-  subnet_ids              = vpc.public_subnets
+  subnet_ids              = module.vpc.public_subnets
   vpc_security_group_ids  = [aws_security_group.rds_sg.id]
   username                = "engineerx"
   password                = var.postgres_password 
