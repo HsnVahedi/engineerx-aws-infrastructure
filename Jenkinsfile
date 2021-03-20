@@ -46,7 +46,7 @@ pipeline {
                                 script: 'terraform output -raw media_efs_id',
                                 returnStdout: true
                             )
-                            // println media_efs_id
+                            println media_efs_id
                         }
                         sh('echo ${media_efs_id}')
                     }
