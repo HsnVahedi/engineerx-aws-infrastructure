@@ -36,6 +36,7 @@ pipeline {
             steps {
                 script {
                     if (env.ACTION == 'destroy') {
+                        sh('aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME')
                         sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=false')
                         sh('kubectl -n kube-system rollout status ds aws-node')
                         script {
