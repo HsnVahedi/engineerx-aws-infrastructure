@@ -17,6 +17,7 @@ pipeline {
         AWS_ACCOUNT_ID = credentials('aws-account-id') 
         REGION = "${params.REGION}"
         CLUSTER_NAME = "${params.CLUSTER_NAME}"
+        POSTGRES_PASSWORD = credentials('postgres-password')
     }
     stages {
         stage('Providing Access Keys') {
@@ -35,6 +36,7 @@ pipeline {
             steps {
                 script {
                     if (env.ACTION == 'destroy') {
+                        sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=false')
                         script {
                             def media_efs_id = sh(
                                 script: 'terraform output -raw media_efs_id',
@@ -52,15 +54,15 @@ pipeline {
                                 string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
                             ]
                         }
-                        sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
-                        sh('terraform destroy --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
+                        sh('terraform refresh --var postgres_password=$POSTGRES_PASSWORD --var region=$REGION --var cluster_name=$CLUSTER_NAME')
+                        sh('terraform destroy --auto-approve --var postgres_password=$POSTGRES_PASSWORD --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                     }
                     if (env.ACTION == 'apply') {
-                        sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
-                        sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
+                        sh('terraform refresh --var postgres_password=$POSTGRES_PASSWORD --var region=$REGION --var cluster_name=$CLUSTER_NAME')
+                        sh('terraform apply --var postgres_password=$POSTGRES_PASSWORD --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                     }
                     if (env.ACTION == 'create') {
-                        sh('terraform apply --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
+                        sh('terraform apply --var postgres_password=$POSTGRES_PASSWORD --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME')
                         sh('aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME')
 
                         // TODO: Use terraform Helm Provider instead of these ugly commands.
@@ -89,6 +91,7 @@ pipeline {
                                 string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
                             ]
                         }
+                        sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=true')
                     }
                 }
             }

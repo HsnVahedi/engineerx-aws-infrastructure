@@ -5,3 +5,7 @@ variable "cluster_name" {
 variable "region" {
     type = string
 }
+
+variable "postgres_password" {
+    type = string
+}
