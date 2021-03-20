@@ -7,14 +7,16 @@ pipeline {
     }
     parameters {
         string(name: 'ACTION', defaultValue: 'apply')
+        string(name: 'CLUSTER_NAME', defaultValue: 'engineerx')
+        string(name: 'REGION', defaultValue: 'us-east-2')
     }
     environment {
         ACCESS_KEY_ID = credentials('aws-access-key-id')
         SECRET_KEY = credentials('aws-secret-key')
         ACTION = "${params.ACTION}"
         AWS_ACCOUNT_ID = credentials('aws-account-id') 
-        REGION = "us-east-2"
-        CLUSTER_NAME = "engineerx"
+        REGION = "${params.REGION}"
+        CLUSTER_NAME = "${params.CLUSTER_NAME}"
     }
     stages {
         stage('Providing Access Keys') {
@@ -45,7 +47,9 @@ pipeline {
                             build job: 'efs-pv', parameters: [
                                 string(name: "MEDIA_EFS_ID", value: "${media_efs_id}"),
                                 string(name: "STATIC_EFS_ID", value: "${static_efs_id}"),
-                                string(name: "ACTION", value: "destroy")
+                                string(name: "ACTION", value: "destroy"),
+                                string(name: "REGION", value: "${env.REGION}"),
+                                string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
                             ]
                         }
                         sh('terraform refresh --var region=$REGION --var cluster_name=$CLUSTER_NAME')
@@ -80,7 +84,9 @@ pipeline {
                             build job: 'efs-pv', parameters: [
                                 string(name: "MEDIA_EFS_ID", value: "${media_efs_id}"),
                                 string(name: "STATIC_EFS_ID", value: "${static_efs_id}"),
-                                string(name: "ACTION", value: "create")
+                                string(name: "ACTION", value: "create"),
+                                string(name: "REGION", value: "${env.REGION}"),
+                                string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
                             ]
                         }
                     }
