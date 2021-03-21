@@ -5,6 +5,21 @@ data "aws_vpc" "vpc" {
 resource "aws_security_group" "rds_sg" {
   name   = "rds-sg"
   vpc_id = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [module.vpc.vpc_cidr_block]
+  }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "udp"
+    cidr_blocks = [module.vpc.vpc_cidr_block]
+  }
+
 }
 
 # resource "aws_security_group" "rds_pod_sg" {
