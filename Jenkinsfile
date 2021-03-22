@@ -45,6 +45,11 @@ pipeline {
                                 script: 'terraform output -raw static_efs_id',
                                 returnStdout: true
                             )
+                            build job: 'efs-pvc', parameters: [
+                                string(name: "ACTION", value: "destroy"),
+                                string(name: "REGION", value: "${env.REGION}"),
+                                string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
+                            ]
                             build job: 'efs-pv', parameters: [
                                 string(name: "MEDIA_EFS_ID", value: "${media_efs_id}"),
                                 string(name: "STATIC_EFS_ID", value: "${static_efs_id}"),
@@ -85,6 +90,11 @@ pipeline {
                             build job: 'efs-pv', parameters: [
                                 string(name: "MEDIA_EFS_ID", value: "${media_efs_id}"),
                                 string(name: "STATIC_EFS_ID", value: "${static_efs_id}"),
+                                string(name: "ACTION", value: "create"),
+                                string(name: "REGION", value: "${env.REGION}"),
+                                string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
+                            ]
+                            build job: 'efs-pvc', parameters: [
                                 string(name: "ACTION", value: "create"),
                                 string(name: "REGION", value: "${env.REGION}"),
                                 string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
