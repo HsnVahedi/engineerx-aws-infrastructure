@@ -100,8 +100,7 @@ pipeline {
                                 string(name: "CLUSTER_NAME", value: "${env.CLUSTER_NAME}")
                             ]
                         }
-                        // sh('kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=true')
-                        // sh('kubectl -n kube-system rollout status ds aws-node')
+                        sh('terraform output')
                     }
                 }
             }
