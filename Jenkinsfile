@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'hsndocker/aws-cli:latest'
-            args '-u root:root --entrypoint bash'
+            args '-u root:root --entrypoint bash -i'
         }
     }
     parameters {
