@@ -10,6 +10,6 @@ output "db_endpoint" {
   value = module.db.this_db_instance_endpoint
 }
 
-output "load_balancer_hostname" {
+output "host" {
   value = kubernetes_service.ingress.status.0.load_balancer.0.ingress.0.hostname
 }
