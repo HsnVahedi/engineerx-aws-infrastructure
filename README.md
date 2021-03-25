@@ -98,7 +98,7 @@ We need our eks cluster to be elastic. It has to be able to automatically add/re
 We can install this helm chart:
 
     AWS_ACCOUNT_ID=$(terraform output --raw account_id)
-    sed -i 's/AWS_ACCOUNT_ID/$AWS_ACCOUNT_ID/g' cluster-autoscaler-chart-values.yaml
+    sed -i "s/AWS_ACCOUNT_ID/$AWS_ACCOUNT_ID/g" cluster-autoscaler-chart-values.yaml
     helm repo add autoscaler https://kubernetes.github.io/autoscaler
     helm repo update
     helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml
