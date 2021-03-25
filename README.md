@@ -133,7 +133,7 @@ After creating required infrastructure, we are ready to deploy our application:
     cd ../engineerx-aws-deployment/
     
 #### 1. Install metrics server
-We want to enable our [Horizontal Pod Autoscalers](https://github.com/HsnVahedi/engineerx-aws-deployment/blob/main/hpa.tf) automatically set the number of replicas for each of deployments.
+We want to enable our [Horizontal Pod Autoscalers](https://github.com/HsnVahedi/engineerx-aws-deployment/blob/main/hpa.tf) automatically set the number of replicas for each of deployments. HPAs use these metrics to make decisions about removing/creatin a new pod.
     
     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.2/components.yaml
 
