@@ -91,7 +91,23 @@ Postgres will create the database with this password. Make sure to provide a val
 To be able to connect to our eks cluster, update kubeconfig:
 
      aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME
-     
+   
+#### 8. Install Cluster Autoscaler
+We need out eks cluster to be elastic. It has to be able to automatically add/remove worker nodes.
+
+We can install this helm chart:
+
+    sed -i 's/AWS_ACCOUNT_ID/$AWS_ACCOUNT_ID/g' cluster-autoscaler-chart-values.yaml
+    helm repo add autoscaler https://kubernetes.github.io/autoscaler
+    helm repo update
+    helm install cluster-autoscaler --namespace kube-system autoscaler/cluster-autoscaler --values=cluster-autoscaler-chart-values.yaml
+    
+ #### 9. Install aws-efs-csi-driver
+ To be able to mount EFS storage on containers running on kubernetes pods, we need to install the EFS's container storage interface:
+ 
+    helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/
+    helm repo update
+    helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-driver/aws-efs-csi-driver
 
 
 ## Testing Environment
