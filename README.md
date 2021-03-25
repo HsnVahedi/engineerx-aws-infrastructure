@@ -149,7 +149,7 @@ Now it's time to deploy our project:
     terraform apply --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var backend_version=$BACKEND_VERSION --var frontend_version=$FRONTEND_VERSION --var postgres_password=$POSTGRES_PASSWORD --auto-approve
     
 #### 4. Initialize database with randomly generated objects
-Now the project is up and running. To see the running pods:
+Now the project is up and running. To see the running pods, run this command:
     
     kubectl get pod
     
