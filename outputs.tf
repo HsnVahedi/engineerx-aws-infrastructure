@@ -13,3 +13,9 @@ output "db_endpoint" {
 output "host" {
   value = kubernetes_service.ingress.status.0.load_balancer.0.ingress.0.hostname
 }
+
+data "aws_caller_identity" "current" {}
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
