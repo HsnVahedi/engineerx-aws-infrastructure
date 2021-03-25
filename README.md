@@ -93,7 +93,7 @@ To be able to connect to our eks cluster, update kubeconfig:
      aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME
    
 #### 8. Install Cluster Autoscaler
-We need out eks cluster to be elastic. It has to be able to automatically add/remove worker nodes.
+We need our eks cluster to be elastic. It has to be able to automatically add/remove worker nodes.
 
 We can install this helm chart:
 
