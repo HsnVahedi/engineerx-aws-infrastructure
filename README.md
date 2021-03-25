@@ -85,7 +85,7 @@ Postgres will create the database with this password. Make sure to provide a val
 #### 6. Create Infrastructure (EKS, RDS, EFS)
      cd engineerx-aws-infrastructure/
      terraform init
-     terraform apply --var postgres_password=$POSTGRES_PASSWORD --auto-approve --var region=$REGION
+     terraform apply --var postgres_password=$POSTGRES_PASSWORD --auto-approve --var region=$REGION --var cluster_name=$CLUSTER_NAME
      
 #### 7. Update Kubeconfig
 To be able to connect to our eks cluster, update kubeconfig:
@@ -191,7 +191,7 @@ The `ingress`'s external-ip is `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-yyyyyyyyy.<REGI
 In order to destroy everything, first change directory to `/aws/engineerx-aws-deployment` then destroy the deployment:
 
     cd ../engineerx-aws-deployment
-    terraform destroy --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var postgres_password=$POSTGRES_PASSWORD --auto-approve
+    terraform destroy --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var postgres_password=$POSTGRES_PASSWORD --var cluster_name=$CLUSTER_NAME --auto-approve
     
  Now delete metrics server:
  
