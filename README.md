@@ -191,7 +191,7 @@ The `ingress`'s external-ip is `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-yyyyyyyyy.<REGI
 In order to destroy everything, first change directory to `/aws/engineerx-aws-deployment` then destroy the deployment:
 
     cd ../engineerx-aws-deployment
-    terraform destroy --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var postgres_password=$POSTGRES_PASSWORD --var cluster_name=$CLUSTER_NAME --auto-approve
+    terraform destroy --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var postgres_password=$POSTGRES_PASSWORD --auto-approve
     
  Now delete metrics server:
  
