@@ -136,14 +136,26 @@ After creating required infrastructure, we are ready to deploy our application:
 We want to enable our [Horizontal Pod Autoscalers](https://github.com/HsnVahedi/engineerx-aws-deployment/blob/main/hpa.tf) automatically set the number of replicas for each of deployments. HPAs use these metrics to make decisions about removing/creatin a new pod.
     
     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.2/components.yaml
+    
+#### 2. Set docker credentials
 
-#### 2. Deploy the project
+    DOCKERHUB_CRED_USR=<your-dockerhub-username>
+    DOCKERHUB_CRED_PSW=<your-dockerhub-password>
+
+#### 3. Deploy the project
 Now it's time to deploy our project:
 
     terraform init
     terraform apply --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var backend_version=$BACKEND_VERSION --var frontend_version=$FRONTEND_VERSION --var postgres_password=$POSTGRES_PASSWORD --auto-approve
     
-  
+#### 4. Initialize database with randomly generated objects
+Now the project is up and running. To see the running pods:
+    
+    kubectl get pod
+    
+You should see some output like this:
+
+    
 
 ## Testing Environment
 Integration tests are run in the kubernetes cluster created during [creating infrastructure](https://github.com/HsnVahedi/engineerx-aws-infrastructure). For each of the integration tests, a pod named `integration-${var.test_name}-${var.test_number}` will be created in `integration-test` namespace. Then tests are run using [cypress](https://www.cypress.io/).
