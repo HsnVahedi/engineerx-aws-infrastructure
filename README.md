@@ -156,14 +156,14 @@ Now the project is up and running. To see the running pods, run this command:
 You should see some output like this:
 
     NAME                               READY   STATUS    RESTARTS   AGE
-    backend-6b68ccf547-xw64p           1/1     Running   0          4m50s
+    backend-xxxxxxxxxx-yyyyy           1/1     Running   0          4m50s
     backend-ingress-6bbbb467c6-jth5g   1/1     Running   0          4m50s
     frontend-7cfffdfbfd-hpxrn          1/1     Running   1          4m50s
     ingress-59f5996797-pdwz2           1/1     Running   0          4m50s
 
 To initialize the database with some fake data, execute this command in the backend container:
 
-    kubectl exec backend-6b68ccf547-xw64p -- python manage.py initdb
+    kubectl exec backend-xxxxxxxxxx-yyyyy -- python manage.py initdb
     
 You can also create a super user:
 
@@ -180,11 +180,38 @@ You should see some output like this:
     backend          ClusterIP      172.20.119.232   <none>                                                                   80/TCP         31m
     backendingress   ClusterIP      172.20.47.184    <none>                                                                   80/TCP         31m
     frontend         ClusterIP      172.20.147.20    <none>                                                                   80/TCP         31m
-    ingress          LoadBalancer   172.20.16.41     a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com   80:31309/TCP   71m
+    ingress          LoadBalancer   172.20.16.41     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-yyyyyyyyy.<REGION>.elb.amazonaws.com   80:31309/TCP   71m
     kubernetes       ClusterIP      172.20.0.1       <none> 
 
-The `ingress`'s external-ip is `a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com`. So our website is accessable on `a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com` and our administration pages are accessable on `a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com/admin`.
+The `ingress`'s external-ip is `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-yyyyyyyyy.<REGION>.elb.amazonaws.com`. So our website is accessible on `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-yyyyyyyyy.<REGION>.elb.amazonaws.com` and our administration pages are accessible on `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-yyyyyyyyy.<REGION>.elb.amazonaws.com/admin`.
 
+## Destroy
+
+In order to destroy everything, first change directory to `/aws/engineerx-aws-deployment` then destroy the deployment:
+
+    cd ../engineerx-aws-deployment
+    terraform destroy --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var postgres_password=$POSTGRES_PASSWORD --auto-approve
+    
+ Now delete metrics server:
+ 
+    kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.2/components.yaml
+    
+ Delete persistent volume claims:
+ 
+    cd ../engineerx-efs-pvc
+    terraform destroy --auto-approve
+    
+ Delete persistent volumes:
+ 
+    cd ../engineerx-efs-pv
+    terraform destroy --var static_efs_id=$STATIC_EFS_ID --var media_efs_id=$MEDIA_EFS_ID --auto-approve
+    
+ Destroy AWS Infrastructure:
+ 
+    cd ../engineerx-aws-infrastructure
+    terraform refresh --var postgres_password=$POSTGRES_PASSWORD --var region=$REGION --var cluster_name=$CLUSTER_NAME
+    terraform destroy --auto-approve --var postgres_password=$POSTGRES_PASSWORD --var region=$REGION --var cluster_name=$CLUSTER_NAME
+    
 ## EngineerX code repositories
 
 EngineerX is a big project and consists of several code bases:
