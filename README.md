@@ -148,20 +148,42 @@ Now it's time to deploy our project:
     terraform init
     terraform apply --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var postgres_password=$POSTGRES_PASSWORD --auto-approve
     
-#### 4. Initialize database with randomly generated objects
+#### 4. Initialize database
 Now the project is up and running. To see the running pods, run this command:
     
     kubectl get pod
     
 You should see some output like this:
 
+    NAME                               READY   STATUS    RESTARTS   AGE
+    backend-6b68ccf547-xw64p           1/1     Running   0          4m50s
+    backend-ingress-6bbbb467c6-jth5g   1/1     Running   0          4m50s
+    frontend-7cfffdfbfd-hpxrn          1/1     Running   1          4m50s
+    ingress-59f5996797-pdwz2           1/1     Running   0          4m50s
+
+To initialize the database with some fake data, execute this command in the backend container:
+
+    kubectl exec backend-6b68ccf547-xw64p -- python manage.py initdb
     
+You can also create a super user:
 
-## Testing Environment
-Integration tests are run in the kubernetes cluster created during [creating infrastructure](https://github.com/HsnVahedi/engineerx-aws-infrastructure). For each of the integration tests, a pod named `integration-${var.test_name}-${var.test_number}` will be created in `integration-test` namespace. Then tests are run using [cypress](https://www.cypress.io/).
+    kubectl exec -it backend-6b68ccf547-xw64p -- python manage.py createsuperuser
+    
+#### 5. Visit the WebSite
+To visit our deployed website, first run this command to see existing kubernetes services:
 
-## Cypress Dashboard
-Each of the test runs will be recorded (including a video created by cypress) on the project's [cypress dashboard](https://dashboard.cypress.io/projects/4zons4).
+    kubectl get service
+    
+You should see some output like this:
+
+    NAME             TYPE           CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)        AGE
+    backend          ClusterIP      172.20.119.232   <none>                                                                   80/TCP         31m
+    backendingress   ClusterIP      172.20.47.184    <none>                                                                   80/TCP         31m
+    frontend         ClusterIP      172.20.147.20    <none>                                                                   80/TCP         31m
+    ingress          LoadBalancer   172.20.16.41     a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com   80:31309/TCP   71m
+    kubernetes       ClusterIP      172.20.0.1       <none> 
+
+The `ingress`'s external-ip is `a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com`. So our website is accessable on `a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com` and our administration pages are accessable on `a384a3098f7e643ed8ce93064fd55b32-780759084.us-east-2.elb.amazonaws.com/admin`.
 
 ## EngineerX code repositories
 
