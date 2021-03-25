@@ -108,7 +108,42 @@ We can install this helm chart:
     helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/
     helm repo update
     helm upgrade --install aws-efs-csi-driver --namespace kube-system aws-efs-csi-driver/aws-efs-csi-driver
+    
+#### 10. Provision Persistent Volume
+First of all, store EFS ids that has been created during step #6:
 
+    MEDIA_EFS_ID=$(terraform output -raw media_efs_id)
+    STATIC_EFS_ID=$(terraform output -raw static_efs_id)
+
+Now Provision persistent volume:
+
+    cd ../engineerx-efs-pv
+    terraform init
+    terraform apply --var static_efs_id=$STATIC_EFS_ID --var media_efs_id=$MEDIA_EFS_ID --auto-approve
+    
+#### 11. Create Persistent Volume Claim
+
+    cd ../engineerx-efs-pvc
+    terraform init
+    terraform apply --auto-approve
+    
+## Deploy EngineerX project
+After creating required infrastructure, we are ready to deploy our application:
+    
+    cd ../engineerx-aws-deployment/
+    
+#### 1. Install metrics server
+We want to enable our [Horizontal Pod Autoscalers](https://github.com/HsnVahedi/engineerx-aws-deployment/blob/main/hpa.tf) automatically set the number of replicas for each of deployments.
+    
+    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.2/components.yaml
+
+#### 2. Deploy the project
+Now it's time to deploy our project:
+
+    terraform init
+    terraform apply --var region=$REGION --var dockerhub_username=$DOCKERHUB_CRED_USR --var dockerhub_password=$DOCKERHUB_CRED_PSW --var backend_version=$BACKEND_VERSION --var frontend_version=$FRONTEND_VERSION --var postgres_password=$POSTGRES_PASSWORD --auto-approve
+    
+  
 
 ## Testing Environment
 Integration tests are run in the kubernetes cluster created during [creating infrastructure](https://github.com/HsnVahedi/engineerx-aws-infrastructure). For each of the integration tests, a pod named `integration-${var.test_name}-${var.test_number}` will be created in `integration-test` namespace. Then tests are run using [cypress](https://www.cypress.io/).
