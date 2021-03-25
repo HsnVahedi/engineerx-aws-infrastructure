@@ -13,6 +13,7 @@
 ## Table of contents
 
 - [Introduction to EngineerX project](#introduction-to-engineerx-project)
+- [Requirements](#requirements)
 - [Create AWS Infrastructure](#create-aws-infrastructure)
 - [Deploy EngineerX project](#deploy-engineerx-project)
 - [Destroy](#destroy)
@@ -41,15 +42,57 @@ Key features of the project:
 
 
 
+## Requirements
+
+To deploy this project on AWS, the only thing you need to have installed is [Docker](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj3s9KT68vvAhX0SRUIHfQmAMcQFjAAegQIAxAE&url=https%3A%2F%2Fwww.docker.com%2F&usg=AOvVaw3p9e1qPvdfjCrUwPYAhUlS).
 
 ## Create AWS Infrastructure
 First of all, you will need an AWS account with the IAM permissions listed on the [EKS module documentation](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/iam-permissions.md).
 
 Then you have to create Access Keys (`access key ID` and `secret access key`) for that account. With these access keys, you can programmatically connect to aws and manage your infrastructure.
 
-Now we are going to connect to AWS using [EngineerX's aws-cli](https://github.com/HsnVahedi/engineerx-aws-cli):
+Now we are going to connect to AWS using [EngineerX's aws-cli](https://github.com/HsnVahedi/engineerx-aws-cli). run the aws-cli:
 
      docker run --rm -it --entrypoint bash hsndocker/aws-cli:latest
+     
+Then run these commands in aws-cli container:
+
+#### 1. SET Required Environment variables
+
+     REGION=<your-preferred-region>
+     CLUSTER_NAME=<your-eks-cluster-name>
+     ACCESS_KEY_ID=<your-aws-access-key-id>
+     SECRET_KEY=<your-aws-secret-key>
+     
+#### 2. Authenticate with your access keys
+      
+     aws configure set aws_access_key_id $ACCESS_KEY_ID
+     aws configure set aws_secret_access_key $SECRET_KEY
+     aws configure set default.region $REGION
+     
+#### 3. Clone required repositories
+
+     git clone https://github.com/HsnVahedi/engineerx-aws-infrastructure
+     git clone https://github.com/HsnVahedi/engineerx-aws-deployment
+     git clone https://github.com/HsnVahedi/engineerx-efs-pv
+     git clone https://github.com/HsnVahedi/engineerx-efs-pvc
+     
+#### 5. Set POSTGRES_PASSWORD
+Postgres will create the database with this password. Make sure to provide a valid postgres password, otherwise it will not create the database.
+
+    POSTGRES_PASSWORD=<your-database-password>
+
+#### 6. Create Infrastructure (EKS, RDS, EFS)
+     cd engineerx-aws-infrastructure/
+     terraform init
+     terraform apply --var postgres_password=$POSTGRES_PASSWORD --auto-approve --var region=$REGION
+     
+#### 7. Update Kubeconfig
+To be able to connect to our eks cluster, update kubeconfig:
+
+     aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME
+     
+
 
 ## Testing Environment
 Integration tests are run in the kubernetes cluster created during [creating infrastructure](https://github.com/HsnVahedi/engineerx-aws-infrastructure). For each of the integration tests, a pod named `integration-${var.test_name}-${var.test_number}` will be created in `integration-test` namespace. Then tests are run using [cypress](https://www.cypress.io/).
