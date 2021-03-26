@@ -168,7 +168,7 @@ To initialize the database with some fake data, execute this command in the back
     
 You can also create a super user:
 
-    kubectl exec -it backend-6b68ccf547-xw64p -- python manage.py createsuperuser
+    kubectl exec -it backend-xxxxxxxxxx-yyyyy -- python manage.py createsuperuser
     
 #### 5. Visit the WebSite
 To visit our deployed website, first run this command to see existing kubernetes services:
