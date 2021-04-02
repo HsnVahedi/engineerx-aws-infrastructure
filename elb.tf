@@ -3,7 +3,6 @@ resource "kubernetes_service" "ingress" {
     name = "ingress"
     labels = {
       app  = "ingress"
-      role = "deployment"
     }
   }
 
