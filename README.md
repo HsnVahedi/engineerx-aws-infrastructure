@@ -1,6 +1,6 @@
 <p align="center">
 
-  <h3 align="center">EngineerX AWS Infrastructure</h3>
+  <h3 align="center"><a href="http://a8c390f2223364021a14ec3fb45263a7-1113280492.us-east-2.elb.amazonaws.com">EngineerX</a> AWS Infrastructure</h3>
 
   <p align="center">
     <a href="https://github.com/HsnVahedi/engineerx-aws-infrastructure/issues/new">Report bug</a>
@@ -23,9 +23,9 @@
 
 
 
-## Introduction to EngineerX project
+## Introduction to [EngineerX](http://a8c390f2223364021a14ec3fb45263a7-1113280492.us-east-2.elb.amazonaws.com) project
 
-EngineerX is an open source web application designed for engineers and specialists. It lets them share their ideas, create tutorials, represent themselves, employ other specialists and ...
+[EngineerX](http://a8c390f2223364021a14ec3fb45263a7-1113280492.us-east-2.elb.amazonaws.com) is an open source web application designed for engineers and specialists. It lets them share their ideas, create tutorials, represent themselves, employ other specialists and ...
 
 Currently, The project is at it's first steps and includes a simple but awesome [Content Management System (CMS)](https://en.wikipedia.org/wiki/Content_management_system) that lets content providers to create and manage blog posts.
 
@@ -128,7 +128,7 @@ Now Provision persistent volume:
     terraform init
     terraform apply --auto-approve
     
-## Deploy EngineerX project
+## Deploy [EngineerX](http://a8c390f2223364021a14ec3fb45263a7-1113280492.us-east-2.elb.amazonaws.com) project
 After creating required infrastructure, we are ready to deploy our application:
     
     cd ../engineerx-aws-deployment/
@@ -213,9 +213,9 @@ In order to destroy everything, first change directory to `/aws/engineerx-aws-de
     terraform refresh --var postgres_password=$POSTGRES_PASSWORD --var region=$REGION --var cluster_name=$CLUSTER_NAME
     terraform destroy --auto-approve --var postgres_password=$POSTGRES_PASSWORD --var region=$REGION --var cluster_name=$CLUSTER_NAME
     
-## EngineerX code repositories
+## [EngineerX](http://a8c390f2223364021a14ec3fb45263a7-1113280492.us-east-2.elb.amazonaws.com) code repositories
 
-EngineerX is a big project and consists of several code bases:
+[EngineerX](http://a8c390f2223364021a14ec3fb45263a7-1113280492.us-east-2.elb.amazonaws.com) consists of several code bases:
 
 - [engineerx-aws-cli](https://github.com/HsnVahedi/engineerx-aws-cli)
 - [engineerx-aws-infrastructure](https://github.com/HsnVahedi/engineerx-aws-infrastructure)
