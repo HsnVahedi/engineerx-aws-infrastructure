@@ -15,6 +15,7 @@ module "eks" {
       name          = "worker-group-1"
       instance_type = "t3.xlarge"
       asg_max_size  = 10
+      asg_desired_capacity = 1
       tags = [
         {
           "key"                 = "k8s.io/cluster-autoscaler/enabled"
