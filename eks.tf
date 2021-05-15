@@ -13,7 +13,7 @@ module "eks" {
   worker_groups = [
     {
       name          = "worker-group-1"
-      instance_type = "t3.small"
+      instance_type = "t3.medium"
       asg_max_size  = 10
       asg_min_size  = 1
       asg_desired_capacity = 1
@@ -29,9 +29,6 @@ module "eks" {
           "value"               = "true"
         }
       ]
-      k8s_labels = {
-        "size": "small"
-      }
     },
     {
       name          = "worker-group-2"
@@ -51,9 +48,6 @@ module "eks" {
           "value"               = "true"
         }
       ]
-      k8s_labels = {
-        "size": "xlarge"
-      }
     },
   ]
 
