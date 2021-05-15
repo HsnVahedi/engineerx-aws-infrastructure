@@ -29,6 +29,9 @@ module "eks" {
           "value"               = "true"
         }
       ]
+      k8s_labels = {
+        "size": "small"
+      }
     },
     {
       name          = "worker-group-2"
@@ -48,6 +51,9 @@ module "eks" {
           "value"               = "true"
         }
       ]
+      k8s_labels = {
+        "size": "xlarge"
+      }
     },
   ]
 
