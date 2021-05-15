@@ -13,6 +13,25 @@ module "eks" {
   worker_groups = [
     {
       name          = "worker-group-1"
+      instance_type = "t3.small"
+      asg_max_size  = 10
+      asg_min_size  = 1
+      asg_desired_capacity = 1
+      tags = [
+        {
+          "key"                 = "k8s.io/cluster-autoscaler/enabled"
+          "propagate_at_launch" = "false"
+          "value"               = "true"
+        },
+        {
+          "key"                 = "k8s.io/cluster-autoscaler/${var.cluster_name}"
+          "propagate_at_launch" = "false"
+          "value"               = "true"
+        }
+      ]
+    },
+    {
+      name          = "worker-group-2"
       instance_type = "t3.medium"
       asg_max_size  = 10
       asg_min_size  = 1
